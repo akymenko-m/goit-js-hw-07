@@ -41,18 +41,28 @@ function openLightboxByClickOfImage(event) {
 
     instance = basicLightbox.create(`
         <img src="${event.target.dataset.source}" alt="${event.target.alt}" />
-    `);
+        `,
+        {
+            onClose: (instance) => {
+                document.removeEventListener("keydown", closeLightboxByClickOfImage);
+            },
+            onShow: (instance) => {
+                document.addEventListener("keydown", closeLightboxByClickOfImage);
+            }
+        },
+    );
     instance.show();
     // console.log(event.target);
 
-    if (basicLightbox.visible()) {
-        document.addEventListener("keydown", closeLightboxByClickOfImage);
-    }
+    // if (basicLightbox.visible()) {
+    //     document.addEventListener("keydown", closeLightboxByClickOfImage);
+    // } //через onShow более лучше делать
 }
 
 // close large image
 function closeLightboxByClickOfImage(event) {
     if(event.code === 'Escape') {
         instance.close();
+        console.log(event.code);
     }
 }
