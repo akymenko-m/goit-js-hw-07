@@ -1,13 +1,10 @@
-import { galleryItems } from './gallery-items.js';
-// Change code below this line
-// console.log(galleryItems);
+import { galleryItems } from "./gallery-items.js";
 
-//Create and render markup
-const galleryList = document.querySelector('.gallery');
+const galleryList = document.querySelector(".gallery");
 
 const makeGalleryItem = ({ preview, original, description } = {}) => {
     return `
-        <div class="gallery__item">
+        <li class="gallery__item">
             <a class="gallery__link" href="${original}">
                 <img
                 class="gallery__image"
@@ -16,53 +13,52 @@ const makeGalleryItem = ({ preview, original, description } = {}) => {
                 alt="${description}"
                 />
             </a>
-        </div>
-    `
+        </li>
+    `;
 };
 
-const galleryItem = galleryItems.map(el => {
+const galleryItem = galleryItems.map((el) => {
     return makeGalleryItem(el);
 });
-// console.log(galleryItem);
-galleryList.insertAdjacentHTML('beforeend', galleryItem.join(''));
 
-//Implementation of delegation and obtaining the url of a large image
-galleryList.addEventListener('click', openLightboxByClickOfImage);
+galleryList.insertAdjacentHTML("beforeend", galleryItem.join(""));
 
-let instance; //take out the variable to access it in a function
+galleryList.addEventListener("click", openLightboxByClickOfImage);
+
+let instance;
 
 function openLightboxByClickOfImage(event) {
     event.preventDefault();
 
-    if (!event.target.classList.contains('gallery__image')) {
-        return; 
-    };
-    // console.log(event.target.dataset.source);
+    if (!event.target.classList.contains("gallery__image")) {
+        return;
+    }
 
-    instance = basicLightbox.create(`
+    instance = basicLightbox.create(
+        `
         <img src="${event.target.dataset.source}" alt="${event.target.alt}" />
         `,
         {
             onClose: (instance) => {
-                document.removeEventListener("keydown", closeLightboxByClickOfImage);
+                document.removeEventListener(
+                    "keydown",
+                    closeLightboxByClickOfImage
+                );
             },
             onShow: (instance) => {
-                document.addEventListener("keydown", closeLightboxByClickOfImage);
-            }
-        },
+                document.addEventListener(
+                    "keydown",
+                    closeLightboxByClickOfImage
+                );
+            },
+        }
     );
-    instance.show();
-    // console.log(event.target);
 
-    // if (basicLightbox.visible()) {
-    //     document.addEventListener("keydown", closeLightboxByClickOfImage);
-    // } //через onShow более лучше делать
+    instance.show();
 }
 
-// close large image
 function closeLightboxByClickOfImage(event) {
-    if(event.code === 'Escape') {
+    if (event.code === "Escape") {
         instance.close();
-        console.log(event.code);
     }
 }
